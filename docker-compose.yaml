@@ -1,10 +1,20 @@
 version: "3.8"
 
 services:
-  app:
+  app-dev:
     build:
       context: ./app
       dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 5002:5000
+    env_file:
+      - .env
+    networks:
+      - absensi
+  
+  app-prod:
+    image: "${APP_IMAGE}:${APP_TAG}"
     restart: always
     ports:
       - 5000:5000
@@ -12,6 +22,19 @@ services:
       - .env
     networks:
       - absensi
+  
+  app-staging:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 5001:5000
+    env_file:
+      - .env
+    networks:
+      - absensi
+  
 
   database-attendance:
     container_name: database-attendance-container
